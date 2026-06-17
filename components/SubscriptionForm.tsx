@@ -37,7 +37,7 @@ export default function SubscriptionForm({ onSave, onClose, initial }: Props) {
       setForm({
         name: initial.name,
         price: String(initial.price),
-        currency: initial.currency,
+        currency: initial.currency as 'JPY',
         billingCycle: initial.billingCycle,
         startDate: initial.startDate,
         category: initial.category,
@@ -120,7 +120,7 @@ export default function SubscriptionForm({ onSave, onClose, initial }: Props) {
                 onChange={(e) =>
                   setForm((f) => ({
                     ...f,
-                    currency: e.target.value as 'JPY' | 'USD' | 'EUR',
+                    currency: e.target.value as 'JPY',
                   }))
                 }
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
