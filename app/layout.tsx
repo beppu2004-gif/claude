@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'サブスクトラッカー',
-  description: '契約中のサブスクリプションを一覧で確認できるアプリ',
+  title: 'TOEIC 英単語アプリ',
+  description: 'レベル別TOEIC英単語学習アプリ。4択・タイピングで効率よく学習できます。',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
