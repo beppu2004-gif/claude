@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { QuizMode, QuizFilter, Level, Word } from '@/types/vocabulary';
+import { QuizMode, QuizFilter, Level, VocabCategory, Word } from '@/types/vocabulary';
 import { useQuiz } from '@/hooks/useQuiz';
 import { levelInfo } from '@/data/vocabulary';
 import { CheckCircle, XCircle, ArrowRight, Home } from 'lucide-react';
@@ -10,15 +10,16 @@ interface Props {
   level: Level | 'all';
   mode: QuizMode;
   filter: QuizFilter;
+  category: VocabCategory;
   wrongIds: number[];
   addWrong: (id: number) => void;
   onFinish: (results: { wordId: number; correct: boolean }[]) => void;
   onHome: () => void;
 }
 
-export default function QuizScreen({ level, mode, filter, wrongIds, addWrong, onFinish, onHome }: Props) {
+export default function QuizScreen({ level, mode, filter, category, wrongIds, addWrong, onFinish, onHome }: Props) {
   const { session, current, submitMultiple, submitTyping, setTypingInput, next } = useQuiz(
-    level, mode, filter, wrongIds, addWrong
+    level, mode, filter, wrongIds, addWrong, category
   );
   const inputRef = useRef<HTMLInputElement>(null) as React.RefObject<HTMLInputElement>;
 

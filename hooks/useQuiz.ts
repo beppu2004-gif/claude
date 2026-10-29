@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { vocabulary } from '@/data/vocabulary';
-import { Level, QuizMode, QuizFilter, Word } from '@/types/vocabulary';
+import { Level, QuizMode, QuizFilter, VocabCategory, Word } from '@/types/vocabulary';
 
 const WRONG_IDS_KEY = 'toeic-wrong-ids';
 
@@ -73,19 +73,22 @@ export function useQuiz(
   filter: QuizFilter,
   wrongIds: number[],
   addWrong: (id: number) => void,
+  category: VocabCategory = 'toeic',
 ) {
   const buildWords = useCallback(() => {
-    let pool = level === 'all' ? vocabulary : vocabulary.filter(w => w.level === level);
+    let pool = vocabulary.filter(w => w.category === category);
+    if (level !== 'all') pool = pool.filter(w => w.level === level);
     if (filter === 'wrong') pool = pool.filter(w => wrongIds.includes(w.id));
     return shuffle(pool);
-  }, [level, filter, wrongIds]);
+  }, [level, filter, wrongIds, category]);
 
   const [session, setSession] = useState<QuizSession>(() => {
     const words = buildWords();
+    const catPool = vocabulary.filter(w => w.category === category);
     return {
       words,
       currentIndex: 0,
-      choices: words.length > 0 ? getChoices(words[0], vocabulary.filter(w => w.level === words[0].level)) : [],
+      choices: words.length > 0 ? getChoices(words[0], catPool.filter(w => w.level === words[0].level)) : [],
       answered: false,
       selectedId: null,
       typingInput: '',
@@ -132,24 +135,26 @@ export function useQuiz(
       const nextIdx = s.currentIndex + 1;
       if (nextIdx >= s.words.length) return { ...s, isFinished: true };
       const nextWord = s.words[nextIdx];
+      const catPool = vocabulary.filter(w => w.category === category);
       return {
         ...s,
         currentIndex: nextIdx,
-        choices: getChoices(nextWord, vocabulary.filter(w => w.level === nextWord.level)),
+        choices: getChoices(nextWord, catPool.filter(w => w.level === nextWord.level)),
         answered: false,
         selectedId: null,
         typingInput: '',
         typingResult: null,
       };
     });
-  }, []);
+  }, [category]);
 
   const restart = useCallback(() => {
     const words = buildWords();
+    const catPool = vocabulary.filter(w => w.category === category);
     setSession({
       words,
       currentIndex: 0,
-      choices: words.length > 0 ? getChoices(words[0], vocabulary.filter(w => w.level === words[0].level)) : [],
+      choices: words.length > 0 ? getChoices(words[0], catPool.filter(w => w.level === words[0].level)) : [],
       answered: false,
       selectedId: null,
       typingInput: '',
@@ -158,7 +163,7 @@ export function useQuiz(
       mode,
       isFinished: words.length === 0,
     });
-  }, [buildWords, mode]);
+  }, [buildWords, mode, category]);
 
   return { session, current, submitMultiple, submitTyping, setTypingInput, next, restart };
 }

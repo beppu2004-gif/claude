@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Level, QuizMode, QuizFilter } from '@/types/vocabulary';
+import { Level, QuizMode, QuizFilter, VocabCategory } from '@/types/vocabulary';
 import { useWrongIds } from '@/hooks/useQuiz';
 import HomeScreen from '@/components/toeic/HomeScreen';
 import QuizScreen from '@/components/toeic/QuizScreen';
@@ -14,17 +14,18 @@ interface QuizConfig {
   level: Level | 'all';
   mode: QuizMode;
   filter: QuizFilter;
+  category: VocabCategory;
 }
 
 export default function App() {
   const [view, setView] = useState<View>('home');
-  const [config, setConfig] = useState<QuizConfig>({ level: 1, mode: 'multiple', filter: 'all' });
+  const [config, setConfig] = useState<QuizConfig>({ level: 1, mode: 'multiple', filter: 'all', category: 'toeic' });
   const [results, setResults] = useState<{ wordId: number; correct: boolean }[]>([]);
   const [quizKey, setQuizKey] = useState(0);
   const { wrongIds, addWrong, removeWrong, clearAllWrong } = useWrongIds();
 
-  const handleStart = useCallback((level: Level | 'all', mode: QuizMode, filter: QuizFilter) => {
-    setConfig({ level, mode, filter });
+  const handleStart = useCallback((level: Level | 'all', mode: QuizMode, filter: QuizFilter, category: VocabCategory) => {
+    setConfig({ level, mode, filter, category });
     setResults([]);
     setQuizKey(k => k + 1);
     setView('quiz');
@@ -58,6 +59,7 @@ export default function App() {
         level={config.level}
         mode={config.mode}
         filter={config.filter}
+        category={config.category}
         wrongIds={wrongIds}
         addWrong={addWrong}
         onFinish={handleFinish}
