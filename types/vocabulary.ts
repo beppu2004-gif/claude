@@ -1,3 +1,4 @@
+export type VocabCategory = 'toeic' | 'academic';
 export type Level = 1 | 2 | 3 | 4;
 export type QuizMode = 'multiple' | 'typing';
 export type QuizFilter = 'all' | 'wrong';
@@ -7,6 +8,7 @@ export interface Word {
   word: string;
   meaning: string;
   level: Level;
+  category: VocabCategory;
   exampleEn?: string;
   exampleJp?: string;
 }
@@ -15,6 +17,7 @@ export interface QuizState {
   mode: QuizMode;
   filter: QuizFilter;
   level: Level | 'all';
+  category: VocabCategory;
   wordIds: number[];
   currentIndex: number;
   correctCount: number;
@@ -25,4 +28,5 @@ export interface QuizState {
 export interface AppState {
   view: 'home' | 'quiz' | 'result' | 'wrong-list';
   wrongIds: number[];
+  selectedCategory: VocabCategory | null;
 }
